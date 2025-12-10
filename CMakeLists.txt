@@ -14,10 +14,12 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
 set(PROJECT_SOURCES
-    src/main.cpp
-    src/Global.h
-    src/MainWindow.cpp
-    src/MainWindow.h
+        src/main.cpp
+        src/Global.h
+        src/MainWindow.cpp
+        src/MainWindow.h
+        src/Viewer.h
+        src/Viewer.cpp
 )
 
 set(TS_FILES
