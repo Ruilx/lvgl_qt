@@ -5,6 +5,8 @@
 
 #include <QMouseEvent>
 
+#include <lvgl.h>
+
 Viewer::Viewer(QWidget *parent) : QGraphicsView(parent) {
     QPalette pal = this->palette();
     {
@@ -25,7 +27,10 @@ Viewer::Viewer(QWidget *parent) : QGraphicsView(parent) {
     this->setTransformationAnchor(QGraphicsView::AnchorViewCenter);
     this->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
-    this->setInteractive(true);
+    this->setInteractive(false);
+
+    lv_init();
+    rInlineDebug() << "lvgl version:" << lv_version_major() << "." << lv_version_minor() << "." << lv_version_patch();
 }
 
 void Viewer::zoomIn() {
