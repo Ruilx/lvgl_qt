@@ -84,7 +84,32 @@ add_custom_target(translations ALL
         ${QM_OUTPUT_DIR}/lvgl_qt_zh_CN.qm
 )
 
+# Link Qt Widgets
 target_link_libraries(lvgl_qt PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+# Ensure LVGL headers are available
+# The repository has headers under `${CMAKE_SOURCE_DIR}/include`. Add them for compilation.
+target_include_directories(lvgl_qt PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+# Link to LVGL import library and ensure DLL is available at runtime on Windows
+if (WIN32)
+    # Explicitly link the MinGW import library if present
+    # This avoids name resolution issues and works regardless of generator
+    set(LVGL_DLL "${CMAKE_SOURCE_DIR}/lib/liblvgl.dll")
+    set(LVGL_IMP_LIB "${CMAKE_SOURCE_DIR}/lib/liblvgl.dll.a")
+    if (EXISTS "${LVGL_IMP_LIB}")
+        target_link_libraries(lvgl_qt PRIVATE "${LVGL_IMP_LIB}")
+    else ()
+        # Fallback: try linking by name if only -llvgl is available
+        target_link_directories(lvgl_qt PRIVATE "${CMAKE_SOURCE_DIR}/lib")
+        target_link_libraries(lvgl_qt PRIVATE lvgl)
+    endif ()
+    # Copy the DLL next to the built executable so it loads at runtime
+    add_custom_command(TARGET lvgl_qt POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${LVGL_DLL}" "$<TARGET_FILE_DIR:lvgl_qt>/liblvgl.dll"
+    )
+endif ()
 
 target_compile_definitions(lvgl_qt PRIVATE QT_USE_QSTRINGBUILDER)
 
