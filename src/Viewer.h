@@ -3,6 +3,7 @@
 #include <QGraphicsView>
 
 #include "Global.h"
+#include "scenes/Scene.h"
 
 class Viewer : public QGraphicsView {
     QPoint lastPos;
@@ -27,6 +28,8 @@ class Viewer : public QGraphicsView {
     void keyReleaseEvent(QKeyEvent *event) override;
 
     void resizeEvent(QResizeEvent *event) override;
+
+    Scene *a_scene = new Scene(this);
 
 public:
     explicit Viewer(QWidget *parent = nullptr);

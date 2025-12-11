@@ -12,7 +12,11 @@ Viewer::Viewer(QWidget *parent) : QGraphicsView(parent) {
     {
         pal.setColor(QPalette::Base, Qt::black);
 #if QT_VERSION_MAJOR < 6
+#   if QT_VERSION_MINOR < 15
         pal.setColor(QPalette::Background, Qt::black);
+#   else
+        pal.setColor(QPalette::Window, Qt::black);
+#   endif
 #endif
     }
 
@@ -29,8 +33,8 @@ Viewer::Viewer(QWidget *parent) : QGraphicsView(parent) {
 
     this->setInteractive(false);
 
-    lv_init();
-    rInlineDebug() << "lvgl version:" << lv_version_major() << "." << lv_version_minor() << "." << lv_version_patch();
+    this->setScene(this->a_scene);
+
 }
 
 void Viewer::zoomIn() {
