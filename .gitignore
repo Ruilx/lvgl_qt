@@ -104,9 +104,6 @@ release/
 *.xccheckout
 *.xcscheme
 
-# Static libraries (Linux)
-*.a
-
 # C++ precompiled header/temp files
 *_pch.h.cpp
 *_resource.rc
@@ -133,13 +130,17 @@ __pycache__/
 *.out
 *.app
 *.dll
+!/lib/*.dll
+*.a
+!/lib/*.a
 *.so
 *.dylib
 
 # Project directories to ignore
 backup/
-include/
-lib/
+#include/
+#lib/
+include/**/*.c
 
 # Miscellaneous files
 *.ppt

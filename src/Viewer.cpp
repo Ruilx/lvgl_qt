@@ -5,8 +5,6 @@
 
 #include <QMouseEvent>
 
-#include <lvgl.h>
-
 Viewer::Viewer(QWidget *parent) : QGraphicsView(parent) {
     QPalette pal = this->palette();
     {

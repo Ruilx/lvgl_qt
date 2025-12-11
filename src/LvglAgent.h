@@ -1,8 +1,11 @@
 #pragma once
 
+#include <QObject>
+
 class QSize;
-class LvglAgent
+class LvglAgent: public QObject
 {
+    Q_OBJECT
 public:
     enum ScreenOption
     {
