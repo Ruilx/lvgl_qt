@@ -34,8 +34,7 @@ class Viewer : public QGraphicsView {
 public:
     explicit Viewer(QWidget *parent = nullptr);
 
-    ~Viewer() override {
-    }
+    ~Viewer() override = default;
 
     inline void setIgnoreKeyAutoRepeat(bool enable) { this->ignoreKeyAutoRepeat = enable; }
 

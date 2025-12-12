@@ -20,6 +20,8 @@ set(PROJECT_SOURCES
         src/MainWindow.h
         src/Viewer.h
         src/Viewer.cpp
+        src/scenes/Scene.h
+        src/scenes/Scene.cpp
 )
 
 set(TS_FILES

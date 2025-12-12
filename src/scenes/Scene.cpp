@@ -20,6 +20,6 @@ void Scene::setupScene()
 }
 
 Scene::Scene(QObject* parent): QGraphicsScene(parent)
-{;
+{
     this->setupScene();
 }
