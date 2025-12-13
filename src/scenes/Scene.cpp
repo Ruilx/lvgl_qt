@@ -6,7 +6,6 @@
 
 void Scene::setupScene()
 {
-    this->sceneBoundingRect->setRect(0, 0, 800, 600);
     QPen pen = this->sceneBoundingRect->pen();
     {
         pen.setCapStyle(Qt::RoundCap);
@@ -15,8 +14,14 @@ void Scene::setupScene()
         pen.setStyle(Qt::DashLine);
     }
     this->sceneBoundingRect->setPen(pen);
-    this->setSceneRect(this->sceneBoundingRect->rect());
+    this->sceneBoundingRect->setPos(0, 0);
     this->addItem(this->sceneBoundingRect);
+
+//    this->connect(this, &QGraphicsScene::sceneRectChanged, [this](const QRectF &rect){
+//        this->setSceneBoundingRect(this);
+//        rDebug() << "sceneBoundingRect" << this->sceneBoundingRect->rect();
+//        this->setSceneRect(rect);
+//    });
 }
 
 Scene::Scene(QObject* parent): QGraphicsScene(parent)

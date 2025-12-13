@@ -22,6 +22,14 @@ set(PROJECT_SOURCES
         src/Viewer.cpp
         src/scenes/Scene.h
         src/scenes/Scene.cpp
+        src/LvglInputState.h
+        src/LvglInputState.cpp
+        src/LvglAgent.h
+        src/LvglAgent.cpp
+        src/LvglItem.h
+        src/LvglItem.cpp
+        src/lvgl_ui/LvglDemo1.cpp
+        src/lvgl_ui/LvglDemo1.h
 )
 
 set(TS_FILES

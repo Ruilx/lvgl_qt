@@ -2,6 +2,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
+#include "../LvglItem.h"
 
 class Scene : public QGraphicsScene
 {
@@ -14,6 +15,15 @@ class Scene : public QGraphicsScene
 public:
     explicit Scene(QObject *parent = nullptr);
 
-    ~Scene() override = default;
+    ~Scene() override{
+        if(this->sceneBoundingRect != nullptr){
+            delete this->sceneBoundingRect;
+            this->sceneBoundingRect = nullptr;
+        }
+    };
+
+    void setSceneBoundingRect(const QRect &rect){
+        this->sceneBoundingRect->setRect(rect);
+    }
 
 };
