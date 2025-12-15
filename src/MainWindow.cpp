@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
     this->setupMenus();
 
     this->lvglItem->setPos(0, 0);
+    this->lvglItem->getLvglAgent()->setInputDevicePolicies(LvglAgent::InputDevice_Pointer);
     this->viewer->scene()->addItem(this->lvglItem);
     this->viewer->setSceneRect(this->lvglItem->boundingRect());
 }

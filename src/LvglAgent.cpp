@@ -7,6 +7,28 @@
 
 #include "lvgl_ui/LvglDemo1.h"
 
+void LvglAgent::setupImages() {
+    const QImage::Format format = this->ScreenFormat.value(LV_COLOR_DEPTH, QImage::Format_Invalid);
+    if(this->screenBuffers.count() > 0) {
+        for(QImage *item: this->screenBuffers) {
+            if(item != nullptr) {
+                delete item;
+            }
+            item == nullptr;
+        }
+        this->buf = nullptr;
+        this->bufIndex = -1;
+        this->screenBuffers.clear();
+    }
+    for(int i = 0; i < this->ScreenBufCount; i++){
+        this->screenBuffers.append(new QImage(this->screenSize, format));
+    }
+    if (this->ScreenBufCount > 0) {
+        this->buf = screenBuffers.at(0);
+        this->bufIndex = 0;
+    }
+}
+
 void LvglAgent::lvglInit() {
     if(!lv_is_initialized()) {
         lv_init();
@@ -30,6 +52,7 @@ void LvglAgent::lvglInputDeviceInit() {
         lv_indev_set_read_cb(indev, [](lv_indev_t * indev, lv_indev_data_t * data) {
             auto self = static_cast<LvglAgent *>(lv_indev_get_user_data(indev));
             self->lvglInputState.getMouseState(data);
+            rDebug() << "cb read POINTER at:" << data->point.x << data->point.y << data->key << data->state;
         });
 
         this->inputDevices.insert(InputDevice_Pointer, indev);
@@ -126,7 +149,7 @@ void LvglAgent::lvglCallbackInit() {
         if(self != nullptr) {
             emit self->updateDisplay(self->bufIndex, QRect(QPoint(area->x1, area->y1), QPoint(area->x2, area->y2)));
             if(self->bufIndex >= 0) {
-                self->buf = self->screenBuffers.at((++self->bufIndex) % self->screenBuffers.size());
+                self->buf = self->screenBuffers.at(self->bufIndex = ((++self->bufIndex) % self->screenBuffers.size()));
             }
         }
         lv_display_flush_ready(disp);
@@ -134,14 +157,7 @@ void LvglAgent::lvglCallbackInit() {
 }
 
 LvglAgent::LvglAgent(const QSize &size, QObject* parent): QObject(parent) {
-    const QImage::Format format = this->ScreenFormat.value(LV_COLOR_DEPTH, QImage::Format_Invalid);
-    for(int i = 0; i < this->ScreenBufCount; i++){
-        this->screenBuffers.append(new QImage(size, format));
-    }
-    if (this->ScreenBufCount > 0) {
-        this->buf = screenBuffers.at(0);
-        this->bufIndex = 0;
-    }
+    this->screenSize = size;
 }
 
 LvglAgent::~LvglAgent() {
@@ -181,9 +197,11 @@ LvglAgent::~LvglAgent() {
 
 void LvglAgent::runLvgl(LvglDemo1 *demo){
     QMutexLocker locker(&this->lock);
+    if(this->buf == nullptr) {
+        this->setupImages();
+    }
     if(this->timerId == -1){
         this->lvglInit();
-        rDebug() << "Lvgl will start";
         demo->setupUi();
         this->timerId = this->startTimer(15);
         this->millis.start();

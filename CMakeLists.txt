@@ -30,6 +30,8 @@ set(PROJECT_SOURCES
         src/LvglItem.cpp
         src/lvgl_ui/LvglDemo1.cpp
         src/lvgl_ui/LvglDemo1.h
+        src/lvgl_ui/LvglUi.cpp
+        src/lvgl_ui/LvglUi.h
 )
 
 set(TS_FILES

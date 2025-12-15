@@ -12,12 +12,8 @@ public:
     void setupUi();
 
     ~LvglDemo1(){
-        if(this->label != nullptr){
-            lv_obj_delete(this->label);
-            this->label = nullptr;
-        }
         if(this->btn != nullptr){
-            lv_obj_delete(this->btn);
+            lv_obj_delete_async(this->btn);
             this->btn = nullptr;
         }
     }

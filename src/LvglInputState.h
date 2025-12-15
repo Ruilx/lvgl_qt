@@ -5,13 +5,14 @@
 #include <QList>
 #include <QMutex>
 #include <QQueue>
+#include <QHash>
 #include "src/indev/lv_indev.h"
 
 class QMouseEvent;
 class QKeyEvent;
 
 class LvglInputState {
-    typedef QPair<Qt::Key, Qt::KeyboardModifier> KeyAndModifier;
+    typedef QPair<Qt::Key, Qt::KeyboardModifiers> KeyAndModifier;
 
     static const QHash<KeyAndModifier, lv_key_t> keyMap;
     static const QPair<Qt::Key, Qt::Key> keyAsciiRange;
@@ -24,7 +25,7 @@ public:
 
     typedef struct KeyState_t {
         Qt::Key key;
-        Qt::KeyboardModifier modifier;
+        Qt::KeyboardModifiers modifier;
         bool pressed;
     } KeyState;
 
@@ -95,9 +96,9 @@ public:
     void getKeyState(lv_indev_data_t *data){
         QMutexLocker locker(&this->lock);
         if(!this->keysState.isEmpty()){
-            auto first = this->keysState.constBegin();
+            const auto first = this->keysState.constBegin();
             if(LvglInputState::keyMap.contains(KeyAndModifier(first->key, first->modifier))){
-                data->key = LvglInputState::keyMap.value(KeyAndModifier(first->key, first->modifier));
+                data->key = LvglInputState::keyMap.value(KeyAndModifier(first->key, first->modifier.testFlag(Qt::ShiftModifier) ? Qt::ShiftModifier : Qt::NoModifier));
 
             }else if(first->modifier == Qt::NoModifier && (first->key >= LvglInputState::keyAsciiRange.first && first->key <= LvglInputState::keyAsciiRange.second)){
                 data->key = (first->key & 0xFF);

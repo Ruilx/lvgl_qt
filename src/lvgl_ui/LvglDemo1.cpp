@@ -21,7 +21,7 @@ void LvglDemo1::setupUi() {
     lv_obj_add_event_cb(this->btn, [](lv_event_t *e){
         lv_event_code_t code = lv_event_get_code(e);
         //lv_obj_t *btn = static_cast<lv_obj_t*>(lv_event_get_target(e));
-
+        rDebug() << "Button ON EVENT";
         if(code == LV_EVENT_CLICKED){
             rDebug() << "Button Clicked!";
 

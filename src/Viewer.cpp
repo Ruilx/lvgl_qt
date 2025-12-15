@@ -25,11 +25,11 @@ Viewer::Viewer(QWidget *parent) : QGraphicsView(parent) {
 
     this->setRenderHint(QPainter::TextAntialiasing);
 
-    this->setDragMode(QGraphicsView::RubberBandDrag);
     this->setTransformationAnchor(QGraphicsView::AnchorViewCenter);
     this->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
-    this->setInteractive(false);
+    this->setInteractive(true);
+    this->setDragMode(QGraphicsView::NoDrag);
 
     this->setScene(this->a_scene);
 
@@ -127,10 +127,12 @@ void Viewer::wheelEvent(QWheelEvent *event) {
 }
 
 void Viewer::keyPressEvent(QKeyEvent *event) {
+    rDebug() << "View key press:" << event->key();
     QGraphicsView::keyPressEvent(event);
 }
 
 void Viewer::keyReleaseEvent(QKeyEvent *event) {
+    rDebug() << "View key release:" << event->key();
     QGraphicsView::keyReleaseEvent(event);
 }
 

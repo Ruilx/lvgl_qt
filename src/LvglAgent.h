@@ -6,6 +6,7 @@
 #include <QHash>
 #include <QElapsedTimer>
 
+#include "Global.h"
 #include "LvglInputState.h"
 #include "lvgl.h"
 
@@ -35,8 +36,10 @@ public:
     Q_DECLARE_FLAGS(InputDevicePolicies, InputDevicePolicy)
     Q_FLAG(InputDevicePolicies)
 protected:
-    void timerEvent(QTimerEvent *event);
+    void timerEvent(QTimerEvent *event) override;
 private:
+    QSize screenSize;
+
     LvglInputState lvglInputState;
 
     QVarLengthArray<QImage*, ScreenBufCount> screenBuffers;
@@ -53,6 +56,8 @@ private:
 
     QElapsedTimer millis;
 
+    void setupImages();
+
     bool lvglCallbackIsSet = false;
     void lvglInit();
     void lvglInputDeviceInit();
@@ -60,17 +65,33 @@ private:
     void lvglButtonMappingInit();
     void lvglCallbackInit();
 
-    inline const LvglInputState& getLvglInputState() const{ return this->lvglInputState; }
-
     int timerId = -1;
 public:
     explicit LvglAgent(const QSize &size, QObject *parent = nullptr);
 
-    inline const QImage *getImage(int index) const{
+    inline const QImage *getImage(const int index) const{
         if(index < screenBuffers.count()){
             return this->screenBuffers.at(index);
         }
         return nullptr;
+    }
+
+    bool isLvglRunning() const {
+        return this->timerId >= 0;
+    }
+
+    void setScreenSize(const QSize &size) {
+        if(this->timerId < 0) {
+            this->screenSize = size;
+        }else {
+            rError() << "Cannot resize screen size after LVGL started.";
+        }
+    }
+
+    inline LvglInputState& getLvglInputState() { return this->lvglInputState; }
+
+    void setInputDevicePolicies(const InputDevicePolicies policies) {
+        this->inputDevicePolicyFlags = policies;
     }
 
     ~LvglAgent() override;

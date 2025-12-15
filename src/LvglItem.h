@@ -12,39 +12,40 @@ class LvglItem: public QGraphicsObject
 {
     Q_OBJECT
 
-    static constexpr QSize ScreenSize = QSize(320, 240);
+    static constexpr QSize defaultScreenSize = QSize(320, 240);
 
-    QPixmap screen = QPixmap(ScreenSize);
+    QPixmap screen = QPixmap(defaultScreenSize);
     bool isInitialized = false;
 
-    LvglAgent *lvglAgent = new LvglAgent(ScreenSize, this);
+    LvglAgent *lvglAgent = new LvglAgent(defaultScreenSize, this);
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
+    void wheelEvent(QGraphicsSceneWheelEvent *event) override;
 public:
     [[nodiscard]] QRectF boundingRect() const override;
 
-    explicit LvglItem(QGraphicsItem *parent = nullptr): QGraphicsObject(parent){
-        this->screen.fill(QColor(25, 25, 25));
-        QString note("No Output");
-        QFont font = QApplication::font(); {
-            font.setPixelSize(56);
-        }
-        QFontMetrics fm(font);
-        QSize textSize = fm.size(Qt::TextSingleLine, note);
-        rDebug() << textSize;
-        QPainter p(&this->screen);
-        p.setFont(font);
-        p.setPen(Qt::white);
-        rDebug() << QPoint(qAbs(this->screen.width() - textSize.width()) / 2, qAbs(this->screen.height() - textSize.height()) / 2);
-        p.drawStaticText(qAbs(this->screen.width() - textSize.width()) / 2, qAbs(this->screen.height() - textSize.height()) / 2, QStaticText(note));
-
-        this->connect(this->lvglAgent, &LvglAgent::updateDisplay, this, &LvglItem::updateDisplay);
-    }
+    explicit LvglItem(QGraphicsItem *parent = nullptr);
 
     ~LvglItem() override = default;
 
     [[nodiscard]] LvglAgent * const getLvglAgent() const{
         return this->lvglAgent;
+    }
+
+    void setScreenSize(const QSize size) {
+        if(!this->lvglAgent->isLvglRunning()){
+            this->lvglAgent->setScreenSize(size);
+            this->screen = QPixmap(size);
+        }else {
+            rError() << "Cannot set screen size during LVGL is running.";
+        }
+
     }
 
 public slots:
