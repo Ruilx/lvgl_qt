@@ -31,6 +31,8 @@ class Viewer : public QGraphicsView {
 
     Scene *a_scene = new Scene(this);
 
+    bool ctrlPressed = false;
+
 public:
     explicit Viewer(QWidget *parent = nullptr);
 

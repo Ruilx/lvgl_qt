@@ -101,6 +101,7 @@ void LvglItem::updateDisplay(int bufIndex, const QRect &rect) {
     rDebug() << "Will update display:" << bufIndex << "with rect:" << rect;
     const QImage *image = this->lvglAgent->getImage(bufIndex);
     QPainter p(&this->screen);
+    //p.setCompositionMode(QPainter::CompositionMode_Source);
     p.drawImage(rect, *image, rect);
     this->update(rect);
 }

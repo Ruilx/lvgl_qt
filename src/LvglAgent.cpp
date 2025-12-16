@@ -52,7 +52,7 @@ void LvglAgent::lvglInputDeviceInit() {
         lv_indev_set_read_cb(indev, [](lv_indev_t * indev, lv_indev_data_t * data) {
             auto self = static_cast<LvglAgent *>(lv_indev_get_user_data(indev));
             self->lvglInputState.getMouseState(data);
-            rDebug() << "cb read POINTER at:" << data->point.x << data->point.y << data->key << data->state;
+            //rDebug() << "cb read POINTER at:" << data->point.x << data->point.y << data->key << data->state;
         });
 
         this->inputDevices.insert(InputDevice_Pointer, indev);
@@ -128,6 +128,7 @@ void LvglAgent::lvglDisplayInit() {
             image2 == nullptr ? nullptr : image2->bits(),
             buf->sizeInBytes(),
             LV_DISPLAY_RENDER_MODE_PARTIAL
+            //LV_DISPLAY_RENDER_MODE_FULL
         );
     }
 }
@@ -203,7 +204,7 @@ void LvglAgent::runLvgl(LvglDemo1 *demo){
     if(this->timerId == -1){
         this->lvglInit();
         demo->setupUi();
-        this->timerId = this->startTimer(15);
+        this->timerId = this->startTimer(16);
         this->millis.start();
     }
 }

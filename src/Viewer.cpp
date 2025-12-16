@@ -118,21 +118,29 @@ void Viewer::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void Viewer::wheelEvent(QWheelEvent *event) {
-    const int angle = event->angleDelta().y();
+    if(this->ctrlPressed) {
+        const int angle = event->angleDelta().y();
     if (angle < 0) {
         this->zoomOut();
     } else {
         this->zoomIn();
     }
+        event->accept();
+    }else {
+        QGraphicsView::wheelEvent(event);
+    }
+
 }
 
 void Viewer::keyPressEvent(QKeyEvent *event) {
     rDebug() << "View key press:" << event->key();
+    this->ctrlPressed = event->key() == Qt::Key_Control && event->modifiers() == Qt::NoModifier;
     QGraphicsView::keyPressEvent(event);
 }
 
 void Viewer::keyReleaseEvent(QKeyEvent *event) {
     rDebug() << "View key release:" << event->key();
+    this->ctrlPressed = !(event->key() == Qt::Key_Control && event->modifiers() == Qt::NoModifier);
     QGraphicsView::keyReleaseEvent(event);
 }
 
